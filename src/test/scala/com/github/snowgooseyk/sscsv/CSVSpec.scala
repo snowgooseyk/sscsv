@@ -1,5 +1,6 @@
 package com.github.snowgooseyk.sscsv
 
+import java.io.{ File, ByteArrayInputStream, ByteArrayOutputStream }
 import org.specs2.mutable._
 import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
@@ -20,7 +21,7 @@ class CSVSpec extends Specification {
   }
 
   "Read as MapList" in {
-    val resource = new java.io.File(getClass.getResource("/com/github/snowgooseyk/sscsv/CSVSpec1.csv").toURI)
+    val resource = new File(getClass.getResource("/com/github/snowgooseyk/sscsv/CSVSpec1.csv").toURI)
     val actual = CSV(resource).asMapList
     actual must have size 2
     actual(0) must havePairs("Hoge" -> "test1", "Baa" -> "test２", "Foo" -> "test3", "Baz" -> "100,000,000")
@@ -60,6 +61,22 @@ class CSVSpec extends Specification {
     actual(1) must contain(exactly("End quote1\"", "End quote2\"", "End quot3\""))
     actual(2) must contain(exactly("End doule quote1\"\"", "End double quote2\"\""))
     actual(3) must contain(exactly("\"Surround with quote1\"", "\"Surround with quote2\""))
+  }
+
+  "Write resource to File" in {
+    val out = new ByteArrayOutputStream()
+
+    val csv = CSV(out)
+
+    csv ++ "a" ++ "b" ++ "100,000,000" ln () !
+
+    csv ++ "d" ++ "e" ++ "\"f\"" ln () !
+
+    val in = new ByteArrayInputStream(out.toByteArray())
+    val actual = CSV(in).asList
+    actual must have size 2
+    actual(0) must_== List("a", "b", "100,000,000")
+    actual(1) must_== List("d", "e", "\"f\"")
   }
 
   println("Read 100000 CSV lines.")
