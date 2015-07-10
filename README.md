@@ -47,7 +47,7 @@ CSV(new File("/home/snowgooseyk/companies.csv")).iterator.foreach { r =>
 }
 ```
 
-This library supports complex CSV formatted data from resource.
+This library supports a bit complicated CSV data.
 
 ```
 aaa,bbb,ccc
