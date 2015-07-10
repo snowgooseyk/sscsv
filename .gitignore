@@ -1,0 +1,9 @@
+.cache
+.cache-tests
+.cache-main
+.project
+.classpath
+.settings
+.swp
+target
+project/target
