@@ -4,6 +4,6 @@
 .project
 .classpath
 .settings
-.swp
+*.swp
 target
 project/target
