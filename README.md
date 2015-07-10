@@ -11,7 +11,7 @@ Add SBT dependency.
 "com.github.snowgooseyk" %% "sscsv" % "0.1.0"
 ```
 
-## Read CSV file.
+## Read CSV file
 
 Read [CSV](https://tools.ietf.org/html/rfc4180) formatted data from resource.
 
@@ -63,7 +63,7 @@ import com.github.snowgooseyk.sscsv._
 CSV(new File("/home/snowgooseyk/import.csv")).asList
 ```
 
-## Write CSV file.
+## Write CSV file
 
 ```scala
 import java.io,File
