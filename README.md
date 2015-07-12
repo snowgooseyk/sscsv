@@ -1,6 +1,8 @@
 Simple CSV library for Scala
 ===============================================
 
+[![Build Status](https://travis-ci.org/snowgooseyk/sscsv.svg)](https://travis-ci.org/snowgooseyk/sscsv)
+[![Coverage Status](https://coveralls.io/repos/snowgooseyk/sscsv/badge.svg)](https://coveralls.io/r/snowgooseyk/sscsv)
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://doge.mit-license.org)
 
 Supports Scala 2.10+
