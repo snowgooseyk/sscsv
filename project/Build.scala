@@ -50,7 +50,6 @@ object Dependencies {
   
   val specsVersion = "3.6.2"
 
-  val commonsLang = "org.apache.commons" % "commons-lang3" % "3.4"
   val specsCore =  "org.specs2" % "specs2-core" % specsVersion % "test" cross CrossVersion.fullMapped {
       case "2.10.5" => "2.10"
       case "2.11.7" => "2.11"
@@ -65,7 +64,6 @@ object Dependencies {
   }
 
   val all = Seq (
-    commonsLang,
     specsCore,
     specsJunit,
     specsMock

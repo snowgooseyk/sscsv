@@ -9,9 +9,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.github.snowgooseyk.sscsv.base.Row;
+import com.github.snowgooseyk.sscsv.base.Utils;
 
 public class DelimitedReadIterator implements Iterator<Row> {
 
@@ -103,9 +102,9 @@ public class DelimitedReadIterator implements Iterator<Row> {
     protected String removeQuote(StringBuilder buffer) {
         String result = buffer.toString();
         final String quot = getQuot();
-        result = StringUtils.removeStart(result, quot);
-        result = StringUtils.removeEnd(result, quot);
-        result = StringUtils.replace(result, quot + quot, quot);
+        result = Utils.removeStart(result, quot);
+        result = Utils.removeEnd(result, quot);
+        result = Utils.replace(result, quot + quot, quot, -1);
         return result;
     }
 
@@ -147,7 +146,7 @@ public class DelimitedReadIterator implements Iterator<Row> {
 
     protected List<String> split(String target, char splitter) {
         final List<String> result = new ArrayList<String>();
-        if (StringUtils.isEmpty(target)) {
+        if (Utils.empty(target)) {
             return result;
         }
         final int length = target.length();
@@ -158,7 +157,7 @@ public class DelimitedReadIterator implements Iterator<Row> {
             if (target.charAt(position) == splitter) {
                 if (matches) {
                     if (lastIndex == position) {
-                        result.add(StringUtils.EMPTY);
+                        result.add(Utils.EMPTY_STRING);
                     }
                     lastIndex = ++position;
                     continue;
@@ -166,7 +165,7 @@ public class DelimitedReadIterator implements Iterator<Row> {
                 final String tg = target.substring(lastIndex, position);
                 // unicode byte order mark.(BOM)
                 if (tg.isEmpty() || tg.codePointAt(0) == 65279) {
-                    result.add(StringUtils.EMPTY);
+                    result.add(Utils.EMPTY_STRING);
                 } else {
                     result.add(tg);
                 }

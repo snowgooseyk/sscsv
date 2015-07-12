@@ -9,10 +9,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.SystemUtils;
-
 import com.github.snowgooseyk.sscsv.base.IndexedValue;
+import com.github.snowgooseyk.sscsv.base.Utils;
 import com.github.snowgooseyk.sscsv.base.WriteBuffer;
 
 public class DelimitedWriteBuffer implements WriteBuffer {
@@ -63,13 +61,13 @@ public class DelimitedWriteBuffer implements WriteBuffer {
 
     protected String coverQuot(String str) {
         if (!requiredQuote) {
-            if (StringUtils.isEmpty(str)) {
-                return StringUtils.EMPTY;
-            } else if (!StringUtils.containsAny(str, new char[] { delimitor, '"', '\r', '\n' })) {
+            if (Utils.empty(str)) {
+                return Utils.EMPTY_STRING;
+            } else if (!Utils.contains(str, new char[] { delimitor, '"', '\r', '\n' })) {
                 return str;
             }
         }
-        if (StringUtils.isEmpty(str)) {
+        if (Utils.empty(str)) {
             return "\"\"";
         }
         final StringBuilder buffer = new StringBuilder(str.length() + 2);
@@ -109,7 +107,7 @@ public class DelimitedWriteBuffer implements WriteBuffer {
             }
             buffer.deleteCharAt(this.buffer.length() - 1);
         }
-        buffer.append(SystemUtils.LINE_SEPARATOR);
+        buffer.append(Utils.LINE_SEPARATOR);
         this.currentIndex++;
         this.currentRow.clear();
         return this;
