@@ -46,7 +46,7 @@ CSV(new File("/home/snowgooseyk/import.csv")).iterator
 // d 
 // e 
 // f 
-CSV(new File("/home/snowgooseyk/companies.csv")).iterator.foreach { r =>
+CSV(new File("/home/snowgooseyk/import.csv")).iterator.foreach { r =>
   r.raw.foreach (c => println(c))
 }
 ```
