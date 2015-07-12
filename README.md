@@ -73,9 +73,9 @@ CSV(new File("/home/snowgooseyk/import.csv")).asList
 import java.io.File
 import com.github.snowgooseyk.sscsv._
 
-val csv = CSV.into(new File("/home/snowgooseyk/export.csv")
+val csv = CSV.into(new File("/home/snowgooseyk/export.csv"))
 
-// Appends(++) data and flushes(!) outputstream per line(ln).
+// Appends(++) data and flush(!) file per line(ln).
 csv ++ "foo" ++ "baa" ++ "baz" ln() !
 csv ++ "d" ++ "e" ++ "f" ln() !
 
