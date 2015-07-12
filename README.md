@@ -13,7 +13,7 @@ Add SBT dependency.
 
 ## Read CSV file
 
-Read [CSV](https://tools.ietf.org/html/rfc4180) formatted data from resource.
+Read [CSV](https://tools.ietf.org/html/rfc4180) formatted data.
 
 ```
 foo,baa,baz
@@ -71,7 +71,7 @@ import com.github.snowgooseyk.sscsv._
 
 val csv = CSV.into(new File("/home/snowgooseyk/export.csv")
 
-// Appends(++) data and flushes(!) outputstream per line.
+// Appends(++) data and flushes(!) outputstream per line(ln).
 csv ++ "foo" ++ "baa" ++ "baz" ln() !
 csv ++ "d" ++ "e" ++ "f" ln() !
 
