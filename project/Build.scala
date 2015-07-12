@@ -73,9 +73,11 @@ object Dependencies {
 object Resolvers {
   val m2local = Resolver.mavenLocal 
   val sonatype = Resolver.sonatypeRepo("snapshots")
+  val scalazBintray = "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
   val all = Seq (
     m2local,
-    sonatype
+    sonatype,
+    scalazBintray
   )
 }
 
