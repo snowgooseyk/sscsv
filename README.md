@@ -3,6 +3,8 @@ Simple CSV library for Scala
 
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://doge.mit-license.org)
 
+Supports Scala 2.10+
+
 # Usage
 
 Add SBT dependency.

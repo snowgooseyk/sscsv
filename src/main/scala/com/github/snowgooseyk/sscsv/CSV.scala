@@ -61,7 +61,7 @@ class Reader(sep: Char, in: InputStream, encoding: String = "UTF-8", autoClose: 
 
 case class CSVReader(in: InputStream, encoding: String = "UTF-8", autoClose: Boolean = true) extends Reader(',', in, encoding, autoClose)
 
-sealed case class RowIteratorWrapper(underlying: JIterator[JRow]) extends AbstractIterator[Row] with Iterator[Row] {
+sealed case class RowIteratorWrapper(underlying: JIterator[JRow]) extends Iterator[Row] {
 
   def hasNext = underlying.hasNext
 
