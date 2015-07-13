@@ -25,7 +25,7 @@ d,e,f
 ```
 
 ```scala
-import java.io,File
+import java.io.File
 import com.github.snowgooseyk.sscsv._
 
 // You can also use InputStream or file name(String).
@@ -46,7 +46,7 @@ CSV(new File("/home/snowgooseyk/import.csv")).iterator
 // d 
 // e 
 // f 
-CSV(new File("/home/snowgooseyk/companies.csv")).iterator.foreach { r =>
+CSV(new File("/home/snowgooseyk/import.csv")).iterator.foreach { r =>
   r.raw.foreach (c => println(c))
 }
 ```
@@ -60,7 +60,7 @@ aaa,bbb,ccc
 ```
 
 ```scala
-import java.io,File
+import java.io.File
 import com.github.snowgooseyk.sscsv._
 
 // List(List(aaa,bbb,ccc),List(ddd,eee,line-separator or comma, or double-quote" that have no problem.))
@@ -70,12 +70,12 @@ CSV(new File("/home/snowgooseyk/import.csv")).asList
 ## Write CSV file
 
 ```scala
-import java.io,File
+import java.io.File
 import com.github.snowgooseyk.sscsv._
 
-val csv = CSV.into(new File("/home/snowgooseyk/export.csv")
+val csv = CSV.into(new File("/home/snowgooseyk/export.csv"))
 
-// Appends(++) data and flushes(!) outputstream per line(ln).
+// Appends(++) data and flush(!) file per line(ln).
 csv ++ "foo" ++ "baa" ++ "baz" ln() !
 csv ++ "d" ++ "e" ++ "f" ln() !
 
