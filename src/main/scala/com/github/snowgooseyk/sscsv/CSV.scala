@@ -17,19 +17,20 @@ import scala.util.Random
  * @author snowgooseyk
  */
 object CSV {
-  def apply(in: InputStream): CSVReader = apply(in, "UTF-8")
+  private[this] val DEFAULT_ENCODING = "UTF-8"
+  def apply(in: InputStream): CSVReader = apply(in, DEFAULT_ENCODING)
   def apply(in: InputStream, encoding: String): CSVReader = apply(in, encoding, true)
-  def apply(in: InputStream, autoClose: Boolean): CSVReader = apply(in, "UTF-8", autoClose)
+  def apply(in: InputStream, autoClose: Boolean): CSVReader = apply(in, DEFAULT_ENCODING, autoClose)
   def apply(in: InputStream, encoding: String, autoClose: Boolean) = new CSVReader(in, encoding, autoClose)
-  def apply(out: OutputStream): CSVWriter = apply(out, "UTF-8")
-  def apply(out: OutputStream, encoding: String): CSVWriter = apply(out, encoding, true)
-  def apply(out: OutputStream, autoClose: Boolean): CSVWriter = apply(out, "UTF-8", autoClose)
-  def apply(out: OutputStream, encoding: String, autoClose: Boolean) = new CSVWriter(out, encoding, autoClose)
-  def apply(file: File): CSVReader = apply(new FileInputStream(file))
+  def apply(file: File): CSVReader = apply(file, DEFAULT_ENCODING)
   def apply(file: File, encoding: String): CSVReader = apply(new FileInputStream(file), encoding)
   def apply(fileName: String): CSVReader = apply(new File(fileName))
   def apply(fileName: String, encoding: String): CSVReader = apply(new File(fileName), encoding)
-  def into(file: File): CSVWriter = apply(new FileOutputStream(file))
+  def apply(out: OutputStream): CSVWriter = apply(out, DEFAULT_ENCODING)
+  def apply(out: OutputStream, encoding: String): CSVWriter = apply(out, encoding, true)
+  def apply(out: OutputStream, autoClose: Boolean): CSVWriter = apply(out, DEFAULT_ENCODING, autoClose)
+  def apply(out: OutputStream, encoding: String, autoClose: Boolean) = new CSVWriter(out, encoding, autoClose)
+  def into(file: File): CSVWriter = into(file, DEFAULT_ENCODING)
   def into(file: File, encoding: String): CSVWriter = apply(new FileOutputStream(file), encoding)
   def into(fileName: String): CSVWriter = into(new File(fileName))
   def into(fileName: String, encoding: String): CSVWriter = into(new File(fileName), encoding)

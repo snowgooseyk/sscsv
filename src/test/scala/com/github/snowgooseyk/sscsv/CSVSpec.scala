@@ -1,8 +1,10 @@
 package com.github.snowgooseyk.sscsv
 
-import java.io.{ File, ByteArrayInputStream, ByteArrayOutputStream }
-import org.specs2.mutable._
+import java.io.{ File, FileInputStream, ByteArrayInputStream, ByteArrayOutputStream }
+import java.util.UUID
 import org.junit.runner.RunWith
+import org.specs2.mutable._
+import org.specs2.execute._
 import org.specs2.runner.JUnitRunner
 
 /**
@@ -63,7 +65,7 @@ class CSVSpec extends Specification {
     actual(3) must contain(exactly("\"Surround with quote1\"", "\"Surround with quote2\""))
   }
 
-  "Write resource to File" in {
+  "Write resource to Stream" in {
     val out = new ByteArrayOutputStream()
 
     val csv = CSV(out)
@@ -79,6 +81,23 @@ class CSVSpec extends Specification {
     actual(1) must_== List("d", "e", "\"f\"")
   }
 
+  "Write resource to File" in TempDirectory { d =>
+    val out = new File(d, "temp.csv")
+
+    out.createNewFile()
+    val csv = CSV.into(out.getPath)
+
+    csv ++ "a" ++ "b" ++ "100,000,000" ln () !
+
+    csv ++ "d" ++ "e" ++ "\"f\"" ln () !
+
+    val in = new FileInputStream(out)
+    val actual = CSV(in).asList
+    actual must have size 2
+    actual(0) must_== List("a", "b", "100,000,000")
+    actual(1) must_== List("d", "e", "\"f\"")
+  }
+
   println("Read 100000 CSV lines.")
   val resource = getClass.getResourceAsStream("/com/github/snowgooseyk/sscsv/100T.csv")
   val s = System.currentTimeMillis()
@@ -86,4 +105,32 @@ class CSVSpec extends Specification {
   val e = System.currentTimeMillis()
   println(s"Erapsed Time: ${e - s} ms.")
 
+  object TempDirectory {
+    def apply[R: AsResult](a: File ⇒ R) = {
+      val temp = createTemporaryDirectory("")
+      try {
+        AsResult.effectively(a(temp))
+      } finally {
+        removeTemporaryDirectory(temp)
+      }
+    }
+
+    def createTemporaryDirectory(suffix: String): File = {
+      val base = new File(new File(System.getProperty("java.io.tmpdir")), "sscsv")
+      val dir = new File(base, UUID.randomUUID().toString + suffix)
+      dir.mkdirs()
+      dir
+    }
+
+    /** Removes a directory (recursively). */
+    def removeTemporaryDirectory(dir: File): Unit = {
+      def recursion(f: File): Unit = {
+        if (f.isDirectory) {
+          f.listFiles().foreach(child ⇒ recursion(child))
+        }
+        f.delete()
+      }
+      recursion(dir)
+    }
+  }
 }
