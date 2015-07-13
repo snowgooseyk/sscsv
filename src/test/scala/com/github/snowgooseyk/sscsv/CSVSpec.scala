@@ -87,9 +87,11 @@ class CSVSpec extends Specification {
     out.createNewFile()
     val csv = CSV.into(out.getPath)
 
-    csv ++ "a" ++ "b" ++ "100,000,000" ln () !
+    csv ++ "a" ++ "b" ++ "100,000,000" ln ()
 
-    csv ++ "d" ++ "e" ++ "\"f\"" ln () !
+    csv ++ "d" ++ "e" ++ "\"f\"" ln ()
+
+    csv !
 
     val in = new FileInputStream(out)
     val actual = CSV(in).asList
