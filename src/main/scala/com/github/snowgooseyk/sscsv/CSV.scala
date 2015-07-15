@@ -1,6 +1,6 @@
 package com.github.snowgooseyk.sscsv
 
-import java.io.{ File, InputStream, OutputStream, FileInputStream }
+import java.io.{ File, InputStream, OutputStream, FileInputStream, FileOutputStream, Reader, BufferedReader, InputStreamReader }
 import java.nio.charset.Charset
 import java.util.{ Iterator => JIterator }
 import scala.collection.AbstractIterator
@@ -10,7 +10,6 @@ import com.github.snowgooseyk.sscsv.base.{ Row => JRow }
 import com.github.snowgooseyk.sscsv.base.dsv.DelimitedReadIterator
 import com.github.snowgooseyk.sscsv.base.dsv.DelimitedWriteBuffer
 import com.github.snowgooseyk.sscsv.base.{ WriteBuffer => JWriteBuffer }
-import java.io.FileOutputStream
 import scala.util.Random
 
 /**
@@ -21,7 +20,15 @@ object CSV {
   def apply(in: InputStream): CSVReader = apply(in, DEFAULT_ENCODING)
   def apply(in: InputStream, encoding: String): CSVReader = apply(in, encoding, true)
   def apply(in: InputStream, autoClose: Boolean): CSVReader = apply(in, DEFAULT_ENCODING, autoClose)
-  def apply(in: InputStream, encoding: String, autoClose: Boolean) = new CSVReader(in, encoding, autoClose)
+  def apply(in: InputStream, encoding: String, autoClose: Boolean): CSVReader = apply(new InputStreamReader(in), encoding, autoClose)
+  def apply(in: Reader): CSVReader = apply(in, DEFAULT_ENCODING)
+  def apply(in: Reader, encoding: String): CSVReader = apply(in, encoding, true)
+  def apply(in: Reader, autoClose: Boolean): CSVReader = apply(in, DEFAULT_ENCODING, autoClose)
+  def apply(in: Reader, encoding: String, autoClose: Boolean): CSVReader = apply(new BufferedReader(in), encoding, autoClose)
+  def apply(in: BufferedReader): CSVReader = apply(in, DEFAULT_ENCODING)
+  def apply(in: BufferedReader, encoding: String): CSVReader = apply(in, encoding, true)
+  def apply(in: BufferedReader, autoClose: Boolean): CSVReader = apply(in, DEFAULT_ENCODING, autoClose)
+  def apply(in: BufferedReader, encoding: String, autoClose: Boolean) = new CSVReader(in, encoding, autoClose)
   def apply(file: File): CSVReader = apply(file, DEFAULT_ENCODING)
   def apply(file: File, encoding: String): CSVReader = apply(new FileInputStream(file), encoding)
   def apply(fileName: String): CSVReader = apply(new File(fileName))
@@ -56,11 +63,11 @@ trait Extractor {
   }
 }
 
-class Reader(sep: Char, in: InputStream, encoding: String = "UTF-8", autoClose: Boolean = true) extends Extractor {
+class FormattedReader(sep: Char, in: BufferedReader, encoding: String = "UTF-8", autoClose: Boolean = true) extends Extractor {
   override val iterator = RowIteratorWrapper(new DelimitedReadIterator(sep, in, Charset.forName(encoding), autoClose))
 }
 
-case class CSVReader(in: InputStream, encoding: String = "UTF-8", autoClose: Boolean = true) extends Reader(',', in, encoding, autoClose)
+case class CSVReader(in: BufferedReader, encoding: String = "UTF-8", autoClose: Boolean = true) extends FormattedReader(',', in, encoding, autoClose)
 
 sealed case class RowIteratorWrapper(underlying: JIterator[JRow]) extends Iterator[Row] {
 

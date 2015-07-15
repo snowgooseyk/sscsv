@@ -2,8 +2,6 @@ package com.github.snowgooseyk.sscsv.base.dsv;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -22,10 +20,10 @@ public class DelimitedReadIterator implements Iterator<Row> {
     private static final String QUOT = "\"";
     private boolean autoClose = true;
 
-    public DelimitedReadIterator(char delimitor, InputStream resource, Charset charset,boolean autoClose) {
+    public DelimitedReadIterator(char delimitor, BufferedReader resource, Charset charset,boolean autoClose) {
         this.charset = charset;
         this.delimitor = delimitor;
-        this.currentReader = new BufferedReader(new InputStreamReader(resource, getCharset()));
+        this.currentReader = resource;
         this.autoClose = autoClose;
     }
 

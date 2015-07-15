@@ -6,6 +6,7 @@ import org.junit.runner.RunWith
 import org.specs2.mutable._
 import org.specs2.execute._
 import org.specs2.runner.JUnitRunner
+import java.io.FileReader
 
 /**
  * @author snowgooseyk
@@ -24,6 +25,14 @@ class CSVSpec extends Specification {
 
   "Read as MapList" in {
     val resource = new File(getClass.getResource("/com/github/snowgooseyk/sscsv/CSVSpec1.csv").toURI)
+    val actual = CSV(resource).asMapList
+    actual must have size 2
+    actual(0) must havePairs("Hoge" -> "test1", "Baa" -> "test２", "Foo" -> "test3", "Baz" -> "100,000,000")
+    actual(1) must havePairs("Hoge" -> "test4", "Baa" -> "test5", "Foo" -> "test\"test6", "Baz" -> "te,st\"test7")
+  }
+
+  "Read as MapList from Reader" in {
+    val resource = new FileReader(new File(getClass.getResource("/com/github/snowgooseyk/sscsv/CSVSpec1.csv").toURI))
     val actual = CSV(resource).asMapList
     actual must have size 2
     actual(0) must havePairs("Hoge" -> "test1", "Baa" -> "test２", "Foo" -> "test3", "Baz" -> "100,000,000")

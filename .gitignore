@@ -7,4 +7,5 @@
 *.swp
 target
 project/target
+project/project
 /bin/
