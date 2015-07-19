@@ -1,6 +1,6 @@
 package com.github.snowgooseyk.sscsv
 
-import java.io.{ File, InputStream, OutputStream, FileInputStream, FileOutputStream, Reader, BufferedReader, InputStreamReader }
+import java.io.{ File, InputStream, OutputStream, FileInputStream, FileOutputStream, Reader, BufferedReader, InputStreamReader, StringReader }
 import java.nio.charset.Charset
 import java.util.{ Iterator => JIterator }
 import scala.collection.AbstractIterator
@@ -26,6 +26,7 @@ object CSV {
   def apply(file: File, encoding: String): CSVReader = apply(new FileInputStream(file), encoding)
   def apply(fileName: String): CSVReader = apply(fileName, DEFAULT_ENCODING)
   def apply(fileName: String, encoding: String): CSVReader = apply(new File(fileName), encoding)
+  def from(contents: String, autoClose: Boolean = true): CSVReader = apply(new StringReader(contents), autoClose)
   def apply(out: OutputStream): CSVWriter = apply(out, DEFAULT_ENCODING)
   def apply(out: OutputStream, encoding: String): CSVWriter = apply(out, encoding, true)
   def apply(out: OutputStream, autoClose: Boolean): CSVWriter = apply(out, DEFAULT_ENCODING, autoClose)

@@ -59,6 +59,20 @@ class CSVSpec extends Specification {
     actual(3) must contain(exactly("zzz", "テスト", "xxx"))
   }
 
+  "Read from String" in {
+    val resource = new String("AAA,BBB,CCC,\"100,000\",\"テスト\"")
+    val actual = CSV.from(resource).asList
+    actual must have size 1
+    actual(0) must contain(exactly("AAA", "BBB", "CCC", "100,000", "テスト"))
+  }
+
+  "Read from Shift-JIS String" in {
+    val resource = new String("AAA,BBB,CCC,\"100,000\",\"テスト\"".getBytes("Shift-JIS"))
+    val actual = CSV.from(resource).asList
+    actual must have size 1
+    actual(0) must contain(exactly("AAA", "BBB", "CCC", "100,000", new String("テスト".getBytes("Shift-JIS"))))
+  }
+
   "Read resource without header" in {
     val resource = getClass.getResourceAsStream("/com/github/snowgooseyk/sscsv/CSVSpec3.csv")
     val actual = CSV(resource).asList
