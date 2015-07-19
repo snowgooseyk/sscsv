@@ -20,18 +20,11 @@ object CSV {
   def apply(in: InputStream): CSVReader = apply(in, DEFAULT_ENCODING)
   def apply(in: InputStream, encoding: String): CSVReader = apply(in, encoding, true)
   def apply(in: InputStream, autoClose: Boolean): CSVReader = apply(in, DEFAULT_ENCODING, autoClose)
-  def apply(in: InputStream, encoding: String, autoClose: Boolean): CSVReader = apply(new InputStreamReader(in), encoding, autoClose)
-  def apply(in: Reader): CSVReader = apply(in, DEFAULT_ENCODING)
-  def apply(in: Reader, encoding: String): CSVReader = apply(in, encoding, true)
-  def apply(in: Reader, autoClose: Boolean): CSVReader = apply(in, DEFAULT_ENCODING, autoClose)
-  def apply(in: Reader, encoding: String, autoClose: Boolean): CSVReader = apply(new BufferedReader(in), encoding, autoClose)
-  def apply(in: BufferedReader): CSVReader = apply(in, DEFAULT_ENCODING)
-  def apply(in: BufferedReader, encoding: String): CSVReader = apply(in, encoding, true)
-  def apply(in: BufferedReader, autoClose: Boolean): CSVReader = apply(in, DEFAULT_ENCODING, autoClose)
-  def apply(in: BufferedReader, encoding: String, autoClose: Boolean) = new CSVReader(in, encoding, autoClose)
+  def apply(in: InputStream, encoding: String, autoClose: Boolean): CSVReader = apply(new InputStreamReader(in, encoding), autoClose)
+  def apply(in: Reader, autoClose: Boolean = true) = new CSVReader(new BufferedReader(in), autoClose)
   def apply(file: File): CSVReader = apply(file, DEFAULT_ENCODING)
   def apply(file: File, encoding: String): CSVReader = apply(new FileInputStream(file), encoding)
-  def apply(fileName: String): CSVReader = apply(new File(fileName))
+  def apply(fileName: String): CSVReader = apply(fileName, DEFAULT_ENCODING)
   def apply(fileName: String, encoding: String): CSVReader = apply(new File(fileName), encoding)
   def apply(out: OutputStream): CSVWriter = apply(out, DEFAULT_ENCODING)
   def apply(out: OutputStream, encoding: String): CSVWriter = apply(out, encoding, true)
@@ -63,11 +56,11 @@ trait Extractor {
   }
 }
 
-class FormattedReader(sep: Char, in: BufferedReader, encoding: String = "UTF-8", autoClose: Boolean = true) extends Extractor {
-  override val iterator = RowIteratorWrapper(new DelimitedReadIterator(sep, in, Charset.forName(encoding), autoClose))
+class FormattedReader(sep: Char, in: BufferedReader, autoClose: Boolean = true) extends Extractor {
+  override val iterator = RowIteratorWrapper(new DelimitedReadIterator(sep, in, autoClose))
 }
 
-case class CSVReader(in: BufferedReader, encoding: String = "UTF-8", autoClose: Boolean = true) extends FormattedReader(',', in, encoding, autoClose)
+case class CSVReader(in: BufferedReader, autoClose: Boolean = true) extends FormattedReader(',', in, autoClose)
 
 sealed case class RowIteratorWrapper(underlying: JIterator[JRow]) extends Iterator[Row] {
 

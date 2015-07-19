@@ -1,6 +1,6 @@
 package com.github.snowgooseyk.sscsv
 
-import java.io.{ File, FileInputStream, ByteArrayInputStream, ByteArrayOutputStream }
+import java.io.{ File, InputStreamReader, FileInputStream, ByteArrayInputStream, ByteArrayOutputStream }
 import java.util.UUID
 import org.junit.runner.RunWith
 import org.specs2.mutable._
@@ -32,7 +32,7 @@ class CSVSpec extends Specification {
   }
 
   "Read as MapList from Reader" in {
-    val resource = new FileReader(new File(getClass.getResource("/com/github/snowgooseyk/sscsv/CSVSpec1.csv").toURI))
+    val resource = new InputStreamReader(new FileInputStream(new File(getClass.getResource("/com/github/snowgooseyk/sscsv/CSVSpec1.csv").toURI)), "UTF-8")
     val actual = CSV(resource).asMapList
     actual must have size 2
     actual(0) must havePairs("Hoge" -> "test1", "Baa" -> "test２", "Foo" -> "test3", "Baz" -> "100,000,000")
@@ -46,7 +46,17 @@ class CSVSpec extends Specification {
     actual(0) must contain(exactly("field_name1", "field_name2", "field_name3"))
     actual(1) must contain(exactly("aaa", "bbb", "ccc"))
     actual(2) must contain(exactly("ddd", "eee", "Value contains line-separator or comma, or double-quot\" that have no problem."))
-    actual(3) must contain(exactly("zzz", "yyy", "xxx"))
+    actual(3) must contain(exactly("zzz", "テスト", "xxx"))
+  }
+
+  "Read from reader" in {
+    val resource = new InputStreamReader(getClass.getResourceAsStream("/com/github/snowgooseyk/sscsv/CSVSpec2.csv"), "Shift-JIS")
+    val actual = CSV(resource).asList
+    actual must have size 4
+    actual(0) must contain(exactly("field_name1", "field_name2", "field_name3"))
+    actual(1) must contain(exactly("aaa", "bbb", "ccc"))
+    actual(2) must contain(exactly("ddd", "eee", "Value contains line-separator or comma, or double-quot\" that have no problem."))
+    actual(3) must contain(exactly("zzz", "テスト", "xxx"))
   }
 
   "Read resource without header" in {
