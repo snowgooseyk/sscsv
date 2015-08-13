@@ -17,6 +17,7 @@ public class DelimitedReadIterator implements Iterator<Row> {
     private final BufferedReader currentReader;
     private static final String QUOT = "\"";
     private boolean autoClose = true;
+    private boolean closed = false;
 
     public DelimitedReadIterator(char delimitor, BufferedReader resource, boolean autoClose) {
         this.delimitor = delimitor;
@@ -78,6 +79,9 @@ public class DelimitedReadIterator implements Iterator<Row> {
 
     protected void proceedNextLine(boolean enableProceedRownum) {
         if (getCurrentLine() == null) {
+        	if(closed()){
+        		return;
+        	}
             try {
                 scrollCurrentLine();
             } catch (final IOException e) {
@@ -132,6 +136,8 @@ public class DelimitedReadIterator implements Iterator<Row> {
         } catch (final IOException e) {
         	//TODO
             throw new RuntimeException(e);
+        } finally {
+            this.closed = true;
         }
     }
 
@@ -197,6 +203,10 @@ public class DelimitedReadIterator implements Iterator<Row> {
 
     protected boolean autoClose(){
     	return autoClose;
+    }
+    
+    protected boolean closed(){
+    	return this.closed;
     }
 
     @Override

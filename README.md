@@ -12,7 +12,7 @@ Supports Scala 2.10+
 Add SBT dependency.
 
 ```scala
-"com.github.snowgooseyk" %% "sscsv" % "0.1.0"
+"com.github.snowgooseyk" %% "sscsv" % "0.1.2"
 ```
 
 ## Read CSV file
@@ -36,8 +36,31 @@ CSV(new File("/home/snowgooseyk/import.csv")).asList
 // List(ListMap(foo -> d,baa -> e,baz -> f))
 CSV(new File("/home/snowgooseyk/import.csv")).asMapList
 
-// Get scala.collection.Iterator[com.github.snowgooseyk.sscsv.Row] 
+// Get scala.collection.Iterator[Seq[String]]
 CSV(new File("/home/snowgooseyk/import.csv")).iterator
+
+// Map to some object
+// Seq((foo,baa,baz),(d,e,f))
+CSV(new File("/home/snowgooseyk/import.csv")).map { columns =>
+  Tuple3(columns(0),columns(1),columns(2))
+}
+
+// Zip with index
+// Seq(
+//   (Seq(foo,baa,baz),0),
+//   (Seq(d,e,f),1)
+// )
+CSV(new File("/home/snowgooseyk/import.csv")).zipWithIndex
+
+// Zip with header values
+// Seq(Seq((d,foo),(e,baa),(f,baz)))
+CSV(new File("/home/snowgooseyk/import.csv")).zipWithHeader
+
+// Zip with header and index
+// Seq(
+//   (Seq((d,foo),(e,baa),(f,baz)),0)
+// )
+CSV(new File("/home/snowgooseyk/import.csv")).zipWithHeaderAndIndex
 
 // Print all column value.
 // foo 
@@ -46,9 +69,7 @@ CSV(new File("/home/snowgooseyk/import.csv")).iterator
 // d 
 // e 
 // f 
-CSV(new File("/home/snowgooseyk/import.csv")).iterator.foreach { r =>
-  r.raw.foreach (c => println(c))
-}
+CSV(new File("/home/snowgooseyk/import.csv")).foreach(_.foreach(println))
 ```
 
 This library supports a bit complicated CSV data.

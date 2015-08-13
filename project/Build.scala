@@ -42,7 +42,7 @@ object BuildSettings {
             </developers>
       ),
       isSnapshot := true,
-      scalacOptions ++= Seq("-feature","-deprecation")
+      scalacOptions ++= Seq("-feature","-deprecation","-language:_")
     )
 }
 

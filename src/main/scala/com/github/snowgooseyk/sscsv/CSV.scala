@@ -37,28 +37,47 @@ object CSV {
   def into(fileName: String, encoding: String): CSVWriter = into(new File(fileName), encoding)
 }
 
-trait Extractor {
-  val iterator: Iterator[Row]
+class FormattedReader(sep: Char, in: BufferedReader, autoClose: Boolean = true) {
+  val rows = RowIteratorWrapper(new DelimitedReadIterator(sep, in, autoClose))
 
-  def asList = iterator.toList.map(r => r.raw)
+  val iterator: Iterator[Seq[String]] = new scala.collection.Iterator[Seq[String]] {
+    def hasNext = rows.hasNext
 
-  def asMapList: List[ListMap[String, String]] = {
-    val header = iterator.take(1).flatMap(r => r.raw).toList
-
-    iterator.drop(0).map { r =>
-      val m = ListMap(r.raw.zipWithIndex.map { zi =>
-        (header(zi._2) -> zi._1)
-      }.toSeq: _*)
-      if (header.size != m.size) {
-        throw new UnbalanceHeaderException(header.size, m.size)
-      }
-      m
-    }.toList
+    def next = rows.next.columns
   }
-}
 
-class FormattedReader(sep: Char, in: BufferedReader, autoClose: Boolean = true) extends Extractor {
-  override val iterator = RowIteratorWrapper(new DelimitedReadIterator(sep, in, autoClose))
+  def foreach(f: Seq[String] => Unit): Unit = iterator.foreach(f)
+
+  def map[B](f: Seq[String] => B) = iterator.toSeq.map(f)
+
+  def flatMap[B](f: Seq[String] => Seq[B]) = iterator.toSeq.flatMap(f)
+
+  def zipWithIndex = iterator.zipWithIndex.toSeq
+
+  def zipWithHeaderIterator: Iterator[Seq[(String, String)]] = {
+    val header = rows.take(1).flatMap(_.columns).toList
+    new scala.collection.Iterator[Seq[(String, String)]] {
+      def hasNext = rows.hasNext
+
+      def next: Seq[(String, String)] = {
+        val row = rows.next
+        val columns = row.columns
+        if (columns.size != header.size) {
+          throw new UnbalanceHeaderException(header.size, columns.size, row.rownum)
+        }
+        columns.zip(header)
+      }
+    }
+  }
+
+  def zipWithHeader = zipWithHeaderIterator.toSeq
+
+  def zipWithHeaderAndIndex = zipWithHeaderIterator.zipWithIndex.toSeq
+
+  def asMapList = zipWithHeaderIterator.map(x => ListMap(x.map(y => (y._2 -> y._1)).toSeq: _*)).toList
+
+  def asList = rows.toList.map(_.columns)
+
 }
 
 case class CSVReader(in: BufferedReader, autoClose: Boolean = true) extends FormattedReader(',', in, autoClose)
@@ -74,7 +93,7 @@ case class Row(r: JRow) {
 
   def rownum = r.getRowNumber
 
-  def raw: List[String] = JListWrapper(r.getRawColumnValues[String]).toList
+  def columns: Seq[String] = JListWrapper(r.getRawColumnValues[String]).toSeq
 }
 
 case class CSVWriter(out: OutputStream, encoding: String = "UTF-8", quote: Boolean = true) {
