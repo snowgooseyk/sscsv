@@ -11,8 +11,7 @@ Supports Scala 2.10+
 
 Add SBT dependency.
 
-```scala
-"com.github.snowgooseyk" %% "sscsv" % "0.1.2"
+"com.github.snowgooseyk" %% "sscsv" % "0.1.1"
 ```
 
 ## Read CSV file
