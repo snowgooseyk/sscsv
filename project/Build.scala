@@ -7,7 +7,7 @@ import scoverage._
 
 object BuildSettings {
     val buildOrganization = "com.github.snowgooseyk"
-    val buildVersion      = "0.1.2"
+    val buildVersion      = "0.1.3-SNAPSHOT"
     val buildScalaVersion = "2.11.6"
     val clossBuildScalaVersion = Seq("2.10.4","2.11.6")
 
