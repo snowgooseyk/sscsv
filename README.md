@@ -38,7 +38,7 @@ CSV("/home/snowgooseyk/import.csv").iterator
 
 // Map to some object
 // Seq((foo,bar,baz),(d,e,f))
-CSV("/home/snowgooseyk/import.csv").map { columns =>
+CSV("/home/snowgooseyk/import.csv").extract { columns =>
   Tuple3(columns(0),columns(1),columns(2))
 }
 

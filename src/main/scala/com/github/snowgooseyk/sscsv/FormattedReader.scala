@@ -19,9 +19,7 @@ class FormattedReader(sep: Char, in: BufferedReader, autoClose: Boolean = true) 
 
   def foreach(f: Seq[String] => Unit): Unit = iterator.foreach(f)
 
-  def map[B](f: Seq[String] => B) = iterator.toSeq.map(f)
-
-  def flatMap[B](f: Seq[String] => Seq[B]) = iterator.toSeq.flatMap(f)
+  def extract[B](f: Seq[String] => B) = iterator.toSeq.map(f)
 
   def zipWithIndex = iterator.zipWithIndex.toSeq
 

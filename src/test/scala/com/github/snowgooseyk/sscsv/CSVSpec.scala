@@ -36,9 +36,9 @@ class CSVSpec extends Specification {
       actual.hasNext must beFalse
     }
 
-    "Read and map to tuple" in {
+    "Read and extract to tuple" in {
       val resource = getClass.getResource("/com/github/snowgooseyk/sscsv/CSVSpec1.csv").toURI.getPath
-      val actual = CSV(resource).map { x =>
+      val actual = CSV(resource).extract { x =>
         Tuple4(x(0), x(1), x(2), x(3))
       }
       actual.size must_== 3
@@ -49,8 +49,8 @@ class CSVSpec extends Specification {
 
     "Read ,flatten and map to tuple" in {
       val resource = getClass.getResource("/com/github/snowgooseyk/sscsv/CSVSpec2.csv").toURI.getPath
-      val actual = CSV(resource, "Shift-JIS").flatMap { x =>
-        Seq(Tuple3(x(0), x(1), x(2)))
+      val actual = CSV(resource, "Shift-JIS").extract { x =>
+        Tuple3(x(0), x(1), x(2))
       }
       actual must have size 4
       actual(0) must_== Tuple3("field_name1", "field_name2", "field_name3")
